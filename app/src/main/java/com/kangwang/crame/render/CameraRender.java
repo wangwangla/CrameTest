@@ -1,11 +1,14 @@
 package com.kangwang.crame.render;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+
+import com.kangwang.crame.MainActivity;
 
 import java.io.IOException;
 
@@ -17,6 +20,10 @@ public class CameraRender implements GLSurfaceView.Renderer {
     private boolean isPreviewing = false;
     private float textWidth;
     private float textHight;
+    private Context context;
+    public CameraRender(MainActivity mainActivity) {
+        context = mainActivity;
+    }
 
     public void create() {
         //创建一个纹理
@@ -24,10 +31,18 @@ public class CameraRender implements GLSurfaceView.Renderer {
         //将纹理 和  surface相关联
         texture = new SurfaceTexture(textureId);
         //将纹理 传入  渲染中
-        drawwe = new PhotoDraw(textureId);
+        drawwe = new PhotoDraw(textureId,context);
         //打开相机   相机将预览画面放入到surface中
         doOpenCamera();
+
     }
+
+    public void changeSize(float scale){
+        textWidth = textHight*scale;
+        drawwe.surfaceChange((int)surfaceWidth,(int)surfaceHight,textWidth,textHight);
+    }
+
+
 
     public void doOpenCamera() {
         if (mCamera == null) {
@@ -193,10 +208,18 @@ public class CameraRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         surfaceChange(width,height);
+        this.surfaceHight = height;
+        this.surfaceWidth = width;
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         render();
     }
+
+    private float surfaceWidth;
+    private float surfaceHight;
+
+
+
 }

@@ -1,11 +1,13 @@
 package com.kangwang.crame.render;
 
+import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.kangwang.crame.constant.Constant;
 
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -19,68 +21,18 @@ import java.nio.ShortBuffer;
  * 目标3:冷色  暖色 ^
  */
 public class PhotoDraw {
-    private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
-                    "attribute vec2 inputTextureCoordinate;" +
-                    "varying vec2 textureCoordinate;" +
-                    "uniform mat4 vMatrix;" +
-                    "void main()" +
-                    "{" +
-                        "gl_Position = vPosition * vMatrix;" +
-                        "textureCoordinate = inputTextureCoordinate;" +
-                    "}";
-
+    private final String vertexShaderCode;
     /**
      * 相机显示   将坐标系发生了变换,比如xx.x>0.4世界上是y上发生了变化,
-     *
-     *
-     * 下图方式
-     * y---------|
-     *          |
-     *          |
-     *          |
-     *          x
      */
-    private final String fragmentShaderCode =
-            "#extension GL_OES_EGL_image_external : require\n" +
-                    "precision mediump float;" +
-                    "varying vec2 textureCoordinate;\n" +
-                    "uniform samplerExternalOES s_texture;\n" +
-                    "void main() {" +
-                        "vec2 uv = textureCoordinate;" +
-                    "if(uv.x <= 0.33){" +
-                    "   uv.x =uv.x * 3.0;" +
-
-
-                    "}else if(uv.x <=0.66){" +
-                    "   uv.x = (uv.x - 0.33)*3.0;" +
-                    "gl_FragColor=texture2D(s_texture,uv);" +
-                    "}else{" +
-                    "   uv.x = (uv.x - 0.66)*3.0;" +
-                    "gl_FragColor=texture2D(s_texture,uv);" +
-                    "}" +
-
-                    "       if(uv.y <= 0.33){" +
-                    "   uv.y =uv.y * 3.0;" +
-                    "    vec4 nColor=texture2D(s_texture,uv);" +
-                    "    float c = nColor.r * 0.3 + nColor.g * 0.59 + nColor.b * 0.11;" +
-                    "    gl_FragColor=vec4(c,c,c,nColor.a);" +
-                    "}else if(uv.y <= 0.66){" +
-                    "   uv.y = (uv.y - 0.33)*3.0;" +
-                    "gl_FragColor=texture2D(s_texture,uv);" +
-                    "}else{" +
-                    "   uv.y = (uv.y - 0.66)*3.0;" +
-                    "gl_FragColor=texture2D(s_texture,uv);" +
-                    "}" +
-
-
-                    "}";
+    private final String fragmentShaderCode;
     private FloatBuffer vertexBuffer, textureVerticesBuffer;
     private ShortBuffer drawListBuffer;
-    int mProgram;
+    private int mProgram;
     private int mPositionHandle;
     private int mTextureCoordHandle;
     private int vMatrix;
+//    private int offsetY ;
 
     private short drawOrder[] = {0, 1, 2, 0, 2, 3};
 
@@ -105,9 +57,13 @@ public class PhotoDraw {
     private int texture;
     private float[] mMVPMatrix=new float[16];
 
-    public PhotoDraw(int texture) {
+    private Context context;
+    public PhotoDraw(int texture, Context context) {
         this.texture = texture;
+        this.context = context;
         //顶点坐标
+        vertexShaderCode = uRes("shader/vershader.sh");
+        fragmentShaderCode = uRes("shader/fragment.sh");
         ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
         vertexBuffer = bb.asFloatBuffer();
@@ -135,6 +91,7 @@ public class PhotoDraw {
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         mTextureCoordHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
         vMatrix = GLES20.glGetUniformLocation(mProgram,"vMatrix");
+//        offsetY = GLES20.glGetUniformLocation(mProgram,"offsetY");
     }
 
     public void draw() {
@@ -149,7 +106,7 @@ public class PhotoDraw {
         GLES20.glEnableVertexAttribArray(mTextureCoordHandle);
         GLES20.glVertexAttribPointer(mTextureCoordHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, vertexStride, textureVerticesBuffer);
         GLES20.glUniformMatrix4fv(vMatrix,1,false,mMVPMatrix,0);
-
+//        GLES20.glUniform1f(offsetY,offsetY);
         //绘制
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
         //结束
@@ -171,15 +128,11 @@ public class PhotoDraw {
     private float[] mProjectMatrix=new float[16];
 
     public void surfaceChange(int width, int height, float textWidth, float textHight) {
+        System.out.println(width+"---------"+height);
         GLES20.glViewport(0,0,width,height);
-        float sWH= textHight / textWidth;
+        float sWH= textWidth / textHight;
         float sWidthHeight=width/(float)height;
 
-
-//        GLES20.glViewport(0,0,width,(height));
-//        float sWH= textHight / textWidth;
-//        float sWidthHeight=(width)/(float)height;
-//        sWH = sWidthHeight;
         if(width<height){
             if(sWH>sWidthHeight){
             Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
@@ -198,6 +151,23 @@ public class PhotoDraw {
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         //计算变换矩阵
         Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+    }
+
+
+    public String uRes(String path){
+        if (context == null) System.out.println("八嘎!");
+        StringBuilder result=new StringBuilder();
+        try{
+            InputStream is=context.getAssets().open(path);
+            int ch;
+            byte[] buffer=new byte[1024];
+            while (-1!=(ch=is.read(buffer))){
+                result.append(new String(buffer,0,ch));
+            }
+        }catch (Exception e){
+            return null;
+        }
+        return result.toString().replaceAll("\\r\\n","\n");
     }
 
 }
