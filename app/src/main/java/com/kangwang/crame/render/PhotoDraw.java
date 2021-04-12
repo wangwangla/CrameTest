@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.transition.ChangeBounds;
 
 import com.kangwang.crame.constant.Constant;
 
@@ -40,23 +41,35 @@ public class PhotoDraw {
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
+    static float xx = 1f;
     static float squareCoords[] = {
-            -1.0f, 1.0f,
-            -1.0f, -1.0f,
-            1.0f, -1.0f,
-            1.0f, 1.0f,
+            -1.0f*xx, 1.0f*xx,
+            -1.0f*xx, -1.0f*xx,
+            1.0f*xx, -1.0f*xx,
+            1.0f*xx, 1.0f*xx,
     };
 
-    static float textureVertices[] = {
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
+    float yy = 1f;
+    float textureVertices[] = {
+            1-yy, 1.0f*yy,
+            1.0f*yy, 1.0f*yy,
+            1.0f*yy, 1-yy,
+            1-yy, 1-yy,
     };
 
     private int texture;
     private float[] mMVPMatrix=new float[16];
+    private float[] model = new float[16];
+    void changeSize(){
+        float yy = 1f;
+        float textureVertices[] = {
+                1-yy, 1.0f*yy,
+                1.0f*yy, 1.0f*yy,
+                1.0f*yy, 1-yy,
+                1-yy, 1-yy,
+        };
 
+    }
     private Context context;
     public PhotoDraw(int texture, Context context) {
         this.texture = texture;
@@ -130,9 +143,8 @@ public class PhotoDraw {
     public void surfaceChange(int width, int height, float textWidth, float textHight) {
         System.out.println(width+"---------"+height);
         GLES20.glViewport(0,0,width,height);
-        float sWH= textWidth / textHight;
+        float sWH= textHight / textWidth;
         float sWidthHeight=width/(float)height;
-
         if(width<height){
             if(sWH>sWidthHeight){
             Matrix.orthoM(mProjectMatrix, 0, -1, 1, -1/sWidthHeight*sWH, 1/sWidthHeight*sWH,3, 7);
@@ -147,10 +159,14 @@ public class PhotoDraw {
                 Matrix.orthoM(mProjectMatrix, 0, -sWidthHeight/sWH,sWidthHeight/sWH, -1,1, 3, 7);
             }
         }
+        Matrix.setIdentityM(model,0);
+//        Matrix.scaleM(model,0,1,1,1);
+        Matrix.translateM(model,0,0,0,2);
         //设置相机位置
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 7.0f, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         //计算变换矩阵
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix,0,mViewMatrix,0,mProjectMatrix,0);
+        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mMVPMatrix,0);
     }
 
 

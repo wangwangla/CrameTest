@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.threebifour).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float scale = 3.0F/4;
+                float scale = 3.0F/4F;
                 cameraRender.changeSize(scale);
             }
         });

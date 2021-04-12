@@ -34,12 +34,12 @@ public class CameraRender implements GLSurfaceView.Renderer {
         drawwe = new PhotoDraw(textureId,context);
         //打开相机   相机将预览画面放入到surface中
         doOpenCamera();
-
     }
 
     public void changeSize(float scale){
-        textWidth = textHight*scale;
+        surfaceHight = surfaceWidth/scale;
         drawwe.surfaceChange((int)surfaceWidth,(int)surfaceHight,textWidth,textHight);
+        drawwe.changeSize();
     }
 
 
