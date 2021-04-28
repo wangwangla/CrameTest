@@ -38,6 +38,7 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     public void changeSize(float scale){
         surfaceHight = surfaceWidth/scale;
+        surfaceWidth = surfaceWidth/scale;
         drawwe.surfaceChange((int)surfaceWidth,(int)surfaceHight,textWidth,textHight);
         drawwe.changeSize();
     }
@@ -69,10 +70,15 @@ public class CameraRender implements GLSurfaceView.Renderer {
             initCamera();
 
             boolean supportZoom = isSupportZoom();
-            if (supportZoom){
+            if (supportZoom) {
                 setZoom(supportZoom);
             }
-
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean success, Camera camera) {
+                    System.out.println(success);
+                }
+            });
         }
     }
 
@@ -87,7 +93,7 @@ public class CameraRender implements GLSurfaceView.Renderer {
                 if(MAX==0)return;
                 int zoomValue = params.getZoom();
                 System.out.println("-----------------MAX:"+MAX+"   params : "+zoomValue);
-                zoomValue += 15;
+//                zoomValue +=;
                 params.setZoom(zoomValue);
                 mCamera.setParameters(params);
                 System.out.println("Is support Zoom " + params.isZoomSupported());
@@ -221,5 +227,20 @@ public class CameraRender implements GLSurfaceView.Renderer {
     private float surfaceHight;
 
 
+    public void autoFocus() {
+        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+                System.out.println(success);
+            }
+        });
 
+        mCamera.setAutoFocusMoveCallback(new Camera.AutoFocusMoveCallback() {
+            @Override
+            public void onAutoFocusMoving(boolean start, Camera camera) {
+
+            }
+        });
+        
+    }
 }
