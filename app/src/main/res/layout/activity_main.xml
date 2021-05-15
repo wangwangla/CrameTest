@@ -6,18 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.opengl.GLSurfaceView
+    <com.kangwang.cramelibrary.CrameView
         android:id="@+id/surface"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.opengl.GLSurfaceView>
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/layout"
+        app:layout_constraintTop_toTopOf="parent"></com.kangwang.cramelibrary.CrameView>
 
 <!--    </android.opengl.GLSurfaceView>-->
     <LinearLayout
+        android:background="@color/white"
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/surface">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -1,2 +1,4 @@
+include ':cramelibrary'
+include ':cramelib'
 include ':app'
 rootProject.name = "Crame"
