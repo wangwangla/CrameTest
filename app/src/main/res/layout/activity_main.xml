@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.kangwang.cramelibrary.GLCameraView
+    <com.kangwang.cramelibrary.method1.CrameView
         android:id="@+id/surface"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/layout"
-        app:layout_constraintTop_toTopOf="parent"></com.kangwang.cramelibrary.GLCameraView>
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.kangwang.cramelibrary.method1.CrameView>
 
 <!--    </android.opengl.GLSurfaceView>-->
     <LinearLayout
@@ -20,83 +22,25 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="horizontal"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
+        <Button
+            android:onClick="picture"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:background="@drawable/round">
 
-            <ImageView
-                android:id="@+id/sixbinine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/img_1">
-
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/threebifour"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/img_1">
-
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@mipmap/img_1">
-
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/img_1">
-
-            </ImageView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/img_1">
-
-            </ImageView>
-        </LinearLayout>
-
-
+        </Button>
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round"
+        android:onClick="switchCame"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="39dp">
+
+    </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>

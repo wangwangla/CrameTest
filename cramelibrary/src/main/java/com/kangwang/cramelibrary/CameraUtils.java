@@ -17,12 +17,14 @@ public class CameraUtils {
     public SurfaceView surfaceView;
     public int fitWidth;
     public int fitHeight;
+    public SurfaceTexture texture;
 
     public CameraUtils(SurfaceView surfaceView) {
         this.surfaceView = surfaceView;
     }
 
     public void startPreview(SurfaceTexture texture0) {
+        this.texture = texture0;
         try {
             camera.setPreviewTexture(texture0);
             camera.startPreview();
@@ -46,6 +48,7 @@ public class CameraUtils {
             }
             //1.设置预览尺寸，防止预览画面变形
             List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
+            //
             int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
             parameters.setPreviewSize(result1[0], result1[1]);
             fitWidth = result1[0];
@@ -54,7 +57,6 @@ public class CameraUtils {
             List<Camera.Size>sizes2 = parameters.getSupportedPictureSizes();
             int[] result2 = getOptimalSize(sizes2,surfaceView.getWidth(),surfaceView.getHeight());
             parameters.setPictureSize(result2[0],result2[1]);
-            //3.得到video尺寸，传给mediarecorder
             camera.setParameters(parameters);
             //设置相机方向
             setCameraDisplayOrientation(cameraId);
@@ -98,7 +100,8 @@ public class CameraUtils {
         //小头
         int bestHeight = sizes.get(0).height;
         //很重要，第一项一定是高/宽
-        float min = Math.abs((float) bestHeight / (float) bestWidth - (float) currentWidth / (float) currentHeight);
+        float min = Math.abs((float) bestHeight / (float) bestWidth -
+                (float) currentWidth / (float) currentHeight);
         while (i < sizes.size()) {
             float current = Math.abs((float) sizes.get(i).height / (float) sizes.get(i).width - (float) currentWidth / (float) currentHeight);
             if (current < min) {
@@ -106,6 +109,7 @@ public class CameraUtils {
                 bestWidth = sizes.get(i).width;
                 bestHeight = sizes.get(i).height;
             }
+            System.out.println(current+"=="+min+"===="+bestHeight+"===="+bestWidth);
             i++;
         }
         int[] result = new int[2];
@@ -151,5 +155,32 @@ public class CameraUtils {
         }
         camera.setDisplayOrientation(result);
         orientation = result;
+    }
+
+    /**
+     * 拍照
+     * @param imageCallback
+     */
+    public void takePicture(final ImageCallback imageCallback) {
+        camera.takePicture(null, null, (data, camera) ->
+                imageCallback.onData(data, new ImageCallback.kkk() {
+                    @Override
+                    public void run1() {
+                        camera.stopPreview();
+                        camera.startPreview();
+                    }
+                }));
+
+    }
+
+    public void switchCame(SurfaceHolder holder) {
+        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        } else {
+            cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        }
+        releaseCamera();
+        openCamera(cameraId);
+        startPreview(holder);
     }
 }
