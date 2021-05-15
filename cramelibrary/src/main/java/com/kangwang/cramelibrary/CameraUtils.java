@@ -22,6 +22,16 @@ public class CameraUtils {
         this.surfaceView = surfaceView;
     }
 
+    public void startPreview(SurfaceTexture texture0) {
+        try {
+            camera.setPreviewTexture(texture0);
+            camera.startPreview();
+        } catch (IOException e) {
+            Log.v("glcamera",e.getMessage());
+        }
+    }
+
+
     /**
      * 打开相机
      */
