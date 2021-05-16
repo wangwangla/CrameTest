@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -49,6 +51,12 @@ public class CameraUtils {
             //1.设置预览尺寸，防止预览画面变形
             List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
             //
+            System.out.println(surfaceView.getWidth()+"=======修改前======"+surfaceView.getHeight());
+//            ViewGroup.LayoutParams layoutParams = surfaceView.getLayoutParams();
+//            layoutParams.height = (int)(layoutParams.width * 4.0F /3.0F);
+//            surfaceView.setLayoutParams(layoutParams);
+            System.out.println(surfaceView.getWidth()+"======修改后======="+surfaceView.getHeight());
+            //比例可以查询可以显示的大小，然后选择一个近似值
             int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
             parameters.setPreviewSize(result1[0], result1[1]);
             fitWidth = result1[0];

@@ -1,6 +1,7 @@
 package com.kangwang.cramelibrary.filter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.util.Log;
@@ -15,6 +16,10 @@ import java.nio.FloatBuffer;
 import java.util.LinkedList;
 
 public abstract class BaseFilter {
+    /**
+     * -1,0   1.1
+     * -1,-1  1,-1
+     */
     private static float squareCoords[] = {
             -1.0f, -1.0f,   // 0 bottom left
             1.0f, -1.0f,   // 1 bottom right
@@ -76,7 +81,7 @@ public abstract class BaseFilter {
             throw new RuntimeException("Unable to create program");
         }
         Log.v("aaaaa", "program created");
-        //共用句柄
+        //共用句柄   位置
         mGLAttribPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");
         mGLUniformTexture = GLES20.glGetUniformLocation(mProgram, "inputImageTexture");
         mGLAttribTextureCoordinate = GLES20.glGetAttribLocation(mProgram,
@@ -88,7 +93,7 @@ public abstract class BaseFilter {
      * 开始绘制
      */
     public void draw(int textureId, float[] metrix) {
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
         runPendingOnDrawTasks();
@@ -98,20 +103,44 @@ public abstract class BaseFilter {
         textureBuffer.position(0);
         GLES20.glVertexAttribPointer(mGLAttribTextureCoordinate, 2, GLES20.GL_FLOAT, false, 0, textureBuffer);
         GLES20.glEnableVertexAttribArray(mGLAttribTextureCoordinate);
-        if (textureId != -1) {
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
-            GLES20.glUniform1i(mGLUniformTexture, 0);
-        }
+//        if (textureId != -1) {
+//            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+//            GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
+//            GLES20.glUniform1i(mGLUniformTexture, 0);
+//        }
         GLES20.glUniformMatrix4fv(mHMatrix, 1, false, metrix, 0);
         onDrawArraysPre();
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glDisableVertexAttribArray(mGLAttribPosition);
         GLES20.glDisableVertexAttribArray(mGLAttribTextureCoordinate);
-        onDrawArraysAfter();
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
+//        onDrawArraysAfter();
+//        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         GLES20.glUseProgram(0);
+
+        capture();
     }
+
+    protected void capture(){
+            int width = 100;
+            int hight = 100;
+            GLES20.glPixelStorei(GLES20.GL_PACK_ALIGNMENT, 1);
+//
+            ByteBuffer buffer = ByteBuffer.allocateDirect(102400);
+            buffer.order(ByteOrder.nativeOrder());
+            buffer.position(0);
+            buffer.put((byte) 1);
+            buffer.put((byte) 2);
+            buffer.put((byte) 3);
+            buffer.put((byte) 4);
+            buffer.put((byte) 5);
+
+            buffer.position(0);
+
+            GLES20.glReadPixels(0, 0, width,hight, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, buffer);
+            int limit = buffer.limit();
+
+
+        }
 
     protected abstract void onDrawArraysPre();
     protected abstract void onDrawArraysAfter();
@@ -226,10 +255,8 @@ public abstract class BaseFilter {
 
     public static int bindTexture() {
         int[] texture = new int[1];
-
         GLES20.glGenTextures(1, texture, 0);
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, texture[0]);
-
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER,
                 GLES20.GL_NEAREST);
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER,
@@ -238,7 +265,6 @@ public abstract class BaseFilter {
                 GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T,
                 GLES20.GL_CLAMP_TO_EDGE);
-
         return texture[0];
     }
 

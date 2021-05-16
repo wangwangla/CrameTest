@@ -19,10 +19,8 @@ public class CoolFilter extends BaseFilter {
 
 	@Override
 	public void setPath() {
-
 		path1 = R.raw.base_vertex_shader;
 		path2 = R.raw.cool;
-
 	}
 
 	@Override
@@ -57,11 +55,11 @@ public class CoolFilter extends BaseFilter {
 			arrayOfByte[(2 + (1024 + j * 4))] = ((byte)arrayOfInt5[j]);
 			arrayOfByte[(3 + (1024 + j * 4))] = -1;
 		}
-		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, 256, 2, 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ByteBuffer.wrap(arrayOfByte));
-
+		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0,
+				GLES20.GL_RGBA, 256, 2, 0,
+				GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
+				ByteBuffer.wrap(arrayOfByte));
 	}
-
-
 
 	@Override
 	public void onDrawArraysAfter(){
@@ -71,6 +69,7 @@ public class CoolFilter extends BaseFilter {
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		}
 	}
+
 	@Override
 	public void onDrawArraysPre(){
 		if (this.mToneCurveTexture[0] != -1){
@@ -83,7 +82,6 @@ public class CoolFilter extends BaseFilter {
 	@Override
 	public void releaseProgram() {
 		super.releaseProgram();
-
 		GLES20.glDeleteTextures(1, mToneCurveTexture, 0);
 		this.mToneCurveTexture[0] = -1;
 	}

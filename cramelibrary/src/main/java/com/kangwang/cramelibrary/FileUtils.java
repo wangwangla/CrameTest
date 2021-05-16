@@ -43,8 +43,18 @@ public class FileUtils {
             boolean isSuccess = dir.mkdirs();
             Log.i("glcamera", "文件夹创建状态--->" + isSuccess);
         }
-        return new File(dir.getPath() + File.separator + "img_" + System.currentTimeMillis() + ".jpg");
+        File file = new File(dir.getPath() + File.separator + "img_" + System.currentTimeMillis() + ".jpg");
+        return file;
+    }
 
+    public static String createImageFileName() {
+        File dir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "glcamera");
+        if (!dir.exists()) {
+            boolean isSuccess = dir.mkdirs();
+            Log.i("glcamera", "文件夹创建状态--->" + isSuccess);
+        }
+        return dir.getPath() + File.separator + "img_" + System.currentTimeMillis() + ".jpg";
     }
 
 

@@ -6,26 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.kangwang.cramelibrary.method1.CrameView
+    <!--    </android.opengl.GLSurfaceView>-->
+
+    <com.kangwang.cramelibrary.GLCameraView
         android:id="@+id/surface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/layout"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
 
-    </com.kangwang.cramelibrary.method1.CrameView>
+    </com.kangwang.cramelibrary.GLCameraView>
 
-<!--    </android.opengl.GLSurfaceView>-->
     <LinearLayout
         android:background="@color/white"
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:background="@drawable/round"
+                android:onClick="picture">
+
+            </Button>
+            <Button
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:background="@drawable/round"
+                android:onClick="picture">
+
+            </Button>
+            <Button
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:background="@drawable/round"
+                android:onClick="picture">
+
+            </Button>
+            <Button
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:background="@drawable/round"
+                android:onClick="picture">
+
+            </Button>
+            <Button
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:background="@drawable/round"
+                android:onClick="picture">
+
+            </Button>
+            <Button
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:background="@drawable/round"
+            android:onClick="picture">
+
+        </Button>
+        </LinearLayout>
         <Button
             android:layout_width="49dp"
             android:layout_height="49dp"

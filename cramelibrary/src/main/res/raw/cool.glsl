@@ -37,7 +37,7 @@ void main()
 	// step4 normal blending with original
 	textureColor = vec4(redCurveValue, greenCurveValue, blueCurveValue, 1.0);
 	textureColor = (textureColorOri - textureColor) * 0.549 + textureColor;
-	
+
 	gl_FragColor = vec4(textureColor.r, textureColor.g, textureColor.b, 1.0);
 } 
   
