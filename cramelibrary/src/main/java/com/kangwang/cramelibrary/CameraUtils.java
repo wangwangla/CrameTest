@@ -181,6 +181,7 @@ public class CameraUtils {
 
     }
 
+
     public void switchCame(SurfaceHolder holder) {
         if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -190,5 +191,16 @@ public class CameraUtils {
         releaseCamera();
         openCamera(cameraId);
         startPreview(holder);
+    }
+
+    public void switchCame() {
+        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        } else {
+            cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        }
+        releaseCamera();
+        openCamera(cameraId);
+        startPreview(texture);
     }
 }

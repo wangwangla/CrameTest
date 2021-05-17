@@ -51,7 +51,7 @@ public class CrameView extends GLSurfaceView implements SurfaceHolder.Callback{
         cameraHelper.takePicture(imageCallback);
     }
 
-    public void switchCarme(){
-        cameraHelper.switchCame(getHolder());
-    }
+//    public void switchCarme(){
+//        cameraHelper.switchCame(getHolder());
+//    }
 }

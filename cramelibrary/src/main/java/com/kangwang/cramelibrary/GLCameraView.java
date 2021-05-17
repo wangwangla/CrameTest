@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL;
@@ -44,7 +46,6 @@ public class GLCameraView extends GLSurfaceView {
     }
 
     private void init(Context context) {
-
         this.context = context;
         setEGLContextClientVersion(2);
         renderer = new GLCameraView.GLRenderer(this);
@@ -65,6 +66,22 @@ public class GLCameraView extends GLSurfaceView {
         imageCallback.onData(capture());
     }
 
+    public void switchCame() {
+        mCameraHelper.switchCame();
+    }
+
+    public void changeStyle1() {
+        runOnDraw(()->{
+            mCurrentFilter.releaseProgram();
+            int type = 1;
+            mCurrentFilter = FilterFactory.createFilter(context,type);
+            //调整预览画面
+            mCurrentFilter.createProgram();
+            mCurrentFilter.onInputSizeChanged(getWidth(),getHeight());
+            //调整录像画面
+        });
+    }
+
 
     public class GLRenderer implements Renderer,SurfaceTexture.OnFrameAvailableListener {
         GLSurfaceView surfaceView;
@@ -72,6 +89,7 @@ public class GLCameraView extends GLSurfaceView {
             this.surfaceView = surfaceView;
             mCameraHelper = new CameraUtils(surfaceView);
             mCurrentFilter = new OriginalFilter(context);
+            runOnDraw = new LinkedList<>();
         }
 
         @Override
@@ -99,6 +117,7 @@ public class GLCameraView extends GLSurfaceView {
          */
         @Override
         public void onDrawFrame(GL10 gl) {
+            runAll(runOnDraw);
             mSurfaceTexture.updateTexImage();
             mSurfaceTexture.getTransformMatrix(mSTMatrix);
             mCurrentFilter.draw(mTextureId, mSTMatrix);
@@ -167,5 +186,20 @@ public class GLCameraView extends GLSurfaceView {
 //            }
 //        }
         return null;
+    }
+
+    void runOnDraw(final Runnable runnable) {
+        synchronized (runOnDraw) {
+            runOnDraw.add(runnable);
+        }
+    }
+    private Queue<Runnable> runOnDraw;
+
+    private void runAll(Queue<Runnable> queue) {
+        synchronized (queue) {
+            while (!queue.isEmpty()) {
+                queue.poll().run();
+            }
+        }
     }
 }

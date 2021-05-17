@@ -161,5 +161,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void switchCame(View view) {
+        crameView.switchCame();
+    }
+
+
+    public void style1(View view) {
+        crameView.changeStyle1();
+    }
+
+    public void style2(View view) {
+
+    }
+
+    public void style3(View view) {
+    }
+
+    public void style4(View view) {
+    }
+
+    public void style5(View view) {
+    }
+
+    public void style6(View view) {
     }
 }
