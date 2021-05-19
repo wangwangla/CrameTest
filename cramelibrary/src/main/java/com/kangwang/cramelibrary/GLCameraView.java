@@ -140,51 +140,7 @@ public class GLCameraView extends GLSurfaceView {
         ByteBuffer buffer = ByteBuffer.allocateDirect(102400);
         buffer.order(ByteOrder.nativeOrder());
         buffer.position(0);
-        buffer.put((byte) 1);
-        buffer.put((byte) 2);
-        buffer.put((byte) 3);
-        buffer.put((byte) 4);
-        buffer.put((byte) 5);
-
-        buffer.position(0);
-
         GLES20.glReadPixels(0, 0, width,hight, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, buffer);
-        int limit = buffer.limit();
-
-        System.out.println("===============");
-//        buffer.rewind();//reset position
-//        int pixelCount = width * hight;
-////        IntBuffer colors = IntBuffer.allocate(pixelCount);
-////            buffer.asIntBuffer().get(colors);
-//
-//
-//        int arr[] = new int[pixelCount];
-//        buffer.asIntBuffer().get(arr,0,pixelCount);
-//
-//        for (int i : arr) {
-//            int c = arr[i];   //2.每个int类型的c是接收到的ABGR，但bitmap需要ARGB格式，所以需要交换B和R的位置
-//            arr[i] = c & -0xff0100 | (c & 0x00ff0000 >> 16) | (c & 0x000000ff << 16); //交换B和R，得到ARGB
-//        }
-//        //写入文件
-//        FileOutputStream fos = null;
-//        Bitmap bmp = null;
-//        try {
-//            File imageFile = FileUtils.createImageFile();
-//            System.out.println("===================start create");
-//            fos = new FileOutputStream(imageFile);
-//            System.out.println("===================create  end");
-//            bmp = Bitmap.createBitmap(arr,0,width,width, hight, Bitmap.Config.ARGB_8888);
-//        } catch (IOException e) {
-//            System.out.println("-----------");
-//            e.printStackTrace();
-//            System.out.println("-----------");
-//        } finally {
-//            try {
-//                fos.close();
-//            } catch (IOException e) {
-//                throw new RuntimeException("Failed to close file $filename");
-//            }
-//        }
         return null;
     }
 
