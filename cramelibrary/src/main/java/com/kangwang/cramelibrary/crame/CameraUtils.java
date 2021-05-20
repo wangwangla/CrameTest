@@ -1,4 +1,4 @@
-package com.kangwang.cramelibrary;
+package com.kangwang.cramelibrary.crame;
 
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
@@ -8,6 +8,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+
+import com.kangwang.cramelibrary.ImageCallback;
 
 import java.io.IOException;
 import java.util.List;

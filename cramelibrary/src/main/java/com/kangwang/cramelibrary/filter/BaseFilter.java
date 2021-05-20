@@ -1,7 +1,6 @@
 package com.kangwang.cramelibrary.filter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.util.Log;
@@ -34,26 +33,27 @@ public abstract class BaseFilter {
             1.0f, 1.0f      // 3 top right
     };
 
-    public Context c;
+    public Context context;
     public int mProgram;
     public FloatBuffer vertexBuffer;
     public FloatBuffer textureBuffer;
-    public int path1;
-    public int path2;
+    public int vertextShader;
+    public int fragtextShader;
     protected int mGLAttribPosition;
     protected int mGLUniformTexture;
     protected int mGLAttribTextureCoordinate;
     protected int mHMatrix;
+//    private final LinkedList<Runnable> mRunOnDraw;
 
-    public BaseFilter(Context c) {
-        this.c = c;
+
+    public BaseFilter(Context context) {
+        this.context = context;
         vertexBuffer = createBuffer(squareCoords);
         textureBuffer = createBuffer(textureVertices);
-        setPath();
-        mRunOnDraw = new LinkedList<>();
+        setshaderpath();
     }
 
-    public abstract void setPath();
+    public abstract void setshaderpath();
 
     private FloatBuffer createBuffer(float[] vertexData) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertexData.length * 4);//要求用allocateDirect()方法,只有ByteBuffer有该方法,so
@@ -69,8 +69,8 @@ public abstract class BaseFilter {
      * 创建绘制脚本程序
      */
     public void createProgram() {
-        String vertexShaderCode = readRawTextFile(c, path1);
-        String fragmentShaderCode = readRawTextFile(c, path2);
+        String vertexShaderCode = readRawTextFile(context, vertextShader);
+        String fragmentShaderCode = readRawTextFile(context, fragtextShader);
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
         mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
@@ -80,12 +80,10 @@ public abstract class BaseFilter {
         if (mProgram == 0) {
             throw new RuntimeException("Unable to create program");
         }
-        Log.v("aaaaa", "program created");
         //共用句柄   位置
         mGLAttribPosition = GLES20.glGetAttribLocation(mProgram, "aPosition");
         mGLUniformTexture = GLES20.glGetUniformLocation(mProgram, "inputImageTexture");
-        mGLAttribTextureCoordinate = GLES20.glGetAttribLocation(mProgram,
-                "aTextureCoordinate");
+        mGLAttribTextureCoordinate = GLES20.glGetAttribLocation(mProgram, "aTextureCoordinate");
         mHMatrix = GLES20.glGetUniformLocation(mProgram, "uTextureMatrix");
     }
 
@@ -96,7 +94,6 @@ public abstract class BaseFilter {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
-        runPendingOnDrawTasks();
         vertexBuffer.position(0);
         GLES20.glVertexAttribPointer(mGLAttribPosition, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
         GLES20.glEnableVertexAttribArray(mGLAttribPosition);
@@ -113,11 +110,10 @@ public abstract class BaseFilter {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glDisableVertexAttribArray(mGLAttribPosition);
         GLES20.glDisableVertexAttribArray(mGLAttribTextureCoordinate);
-//        onDrawArraysAfter();
+        onDrawArraysAfter();
 //        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         GLES20.glUseProgram(0);
-
-        capture();
+//        capture();
     }
 
     protected void capture(){
@@ -137,72 +133,13 @@ public abstract class BaseFilter {
             buffer.position(0);
 
             GLES20.glReadPixels(0, 0, width,hight, GLES20.GL_RGB, GLES20.GL_UNSIGNED_BYTE, buffer);
-            int limit = buffer.limit();
-
-
         }
 
     protected abstract void onDrawArraysPre();
     protected abstract void onDrawArraysAfter();
+
     public void releaseProgram() {
-        Log.v("aaaaa", "deleting program " + mProgram);
         GLES20.glDeleteProgram(mProgram);
-    }
-
-    /**
-     * 注意此处一定要用runondraw,因为要在useprogram之后执行
-     *
-     * @param location
-     * @param floatValue
-     */
-
-    protected void setFloat(final int location, final float floatValue) {
-
-        runOnDraw(new Runnable() {
-            @Override
-            public void run() {
-
-                GLES20.glUniform1f(location, floatValue);
-            }
-        });
-
-
-    }
-
-    protected void setFloatVec2(final int location, final float[] arrayValue) {
-
-        runOnDraw(new Runnable() {
-            @Override
-            public void run() {
-                GLES20.glUniform2fv(location, 1, FloatBuffer.wrap(arrayValue));
-            }
-        });
-
-
-    }
-
-
-    protected void setFloatVec4(final int location, final float[] arrayValue) {
-
-        runOnDraw(new Runnable() {
-            @Override
-            public void run() {
-                GLES20.glUniform4fv(location, 1, FloatBuffer.wrap(arrayValue));
-            }
-        });
-
-    }
-
-
-    protected void setInteger(final int location, final int intValue) {
-
-        runOnDraw(new Runnable() {
-            @Override
-            public void run() {
-                GLES20.glUniform1i(location, intValue);
-            }
-        });
-
     }
 
     public void onInputSizeChanged(final int width, final int height) {
@@ -266,19 +203,5 @@ public abstract class BaseFilter {
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T,
                 GLES20.GL_CLAMP_TO_EDGE);
         return texture[0];
-    }
-
-    private final LinkedList<Runnable> mRunOnDraw;
-
-    protected void runPendingOnDrawTasks() {
-        while (!mRunOnDraw.isEmpty()) {
-            mRunOnDraw.removeFirst().run();
-        }
-    }
-
-    protected void runOnDraw(final Runnable runnable) {
-        synchronized (mRunOnDraw) {
-            mRunOnDraw.addLast(runnable);
-        }
     }
 }

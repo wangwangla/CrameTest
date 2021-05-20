@@ -11,19 +11,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.kangwang.cramelibrary.CameraUtils;
-import com.kangwang.cramelibrary.FileUtils;
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
-import com.kangwang.cramelibrary.GLCameraView;
-import com.kangwang.cramelibrary.ImageCallback;
-import com.kangwang.cramelibrary.method1.CrameView;
+import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     GLCameraView crameView;
@@ -166,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void style1(View view) {
-        crameView.changeStyle1();
+        crameView.changeStyle1(1);
     }
 
     public void style2(View view) {

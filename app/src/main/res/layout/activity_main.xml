@@ -8,7 +8,7 @@
 
     <!--    </android.opengl.GLSurfaceView>-->
 
-    <com.kangwang.cramelibrary.GLCameraView
+    <com.kangwang.cramelibrary.glsurfaceview.GLCameraView
         android:id="@+id/surface"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,7 +17,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp">
 
-    </com.kangwang.cramelibrary.GLCameraView>
+    </com.kangwang.cramelibrary.glsurfaceview.GLCameraView>
 
     <LinearLayout
         android:background="@color/white"
