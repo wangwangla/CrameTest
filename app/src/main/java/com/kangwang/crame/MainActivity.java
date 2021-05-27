@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
 import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
@@ -18,21 +19,66 @@ import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class MainActivity extends AppCompatActivity {
-    GLCameraView crameView;
+public class MainActivity extends BaseActivity{
+
+    private Button openType;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void initView() {
         crameView = findViewById(R.id.surface);
-        checkPermissions();
-        if (PermissionUtils.permissionsChecking(
-                this,
-                new String[] {
-                        Manifest.permission.CAMERA
-                })) {
+        openType = findViewById(R.id.openType);
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_main;
+    }
+
+    public void openType() {
+        View viewById = findViewById(R.id.beat_type);
+        if (viewById.getVisibility() == View.GONE){
+            viewById.setVisibility(View.VISIBLE);
+        }else {
+            viewById.setVisibility(View.GONE);
+        }
+    }
+
+    public void type(int index){
+
+    }
+
+    @Override
+    protected void initListener() {
+        openType.setOnClickListener(this::onClick);
+
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.openType:
+                openType();
+                break;
+            case R.id.beat_type:
+
+                break;
+            case R.id.type_1:
+                type(1);
+                break;
+            case R.id.type_2:
+                type(2);
+                break;
+            case R.id.type_3:
+                type(3);
+                break;
+            case R.id.type_4:
+                type(4);
+                break;
+            case R.id.type_5:
+                type(5);
+                break;
+            case R.id.type_6:
+                type(6);
+                break;
         }
     }
 
@@ -46,11 +92,17 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void checkPermissions() {
+
+
+    @Override
+    protected void checkPermissions() {
         PermissionUtils.requestPermissions(this, new String[] {
                 Manifest.permission.CAMERA,
         }, 0);
+        if (PermissionUtils.permissionsChecking(this, new String[] {Manifest.permission.CAMERA})){}
     }
+
+
 
 //    public void picture(View view) {
 //        crameView.takePicture(new ImageCallback(){
@@ -82,6 +134,36 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+//
+
+    public void picture(View view) {
+        crameView.takePicture(new FilteredBitmapCallback(){
+            @Override
+            public void onData(Bitmap bitmap) {
+//                File file = FileUtils.createImageFile();
+//                //重新写入文件
+//                try {
+//                    // 写入文件
+//                    FileOutputStream fos;
+//                    fos = new FileOutputStream(file);
+//                    //默认jpg
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//                    fos.flush();
+//                    fos.close();
+//                    bitmap.recycle();
+//
+//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+//                            Uri.fromFile(file)));
+//
+////                    Toast.makeText(GLCameraActivity.this, "finished", Toast.LENGTH_SHORT).show();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+            }
+        });
+    }
+
     /**
      * 旋转图片
      *
@@ -122,59 +204,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-    public void picture(View view) {
-        crameView.takePicture(new FilteredBitmapCallback(){
-            @Override
-            public void onData(Bitmap bitmap) {
-//                File file = FileUtils.createImageFile();
-//                //重新写入文件
-//                try {
-//                    // 写入文件
-//                    FileOutputStream fos;
-//                    fos = new FileOutputStream(file);
-//                    //默认jpg
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//                    fos.flush();
-//                    fos.close();
-//                    bitmap.recycle();
-//
-//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-//                            Uri.fromFile(file)));
-//
-////                    Toast.makeText(GLCameraActivity.this, "finished", Toast.LENGTH_SHORT).show();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-            }
-        });
-    }
-
-    public void switchCame(View view) {
-        crameView.switchCame();
-    }
-
-
-    public void style1(View view) {
-        crameView.changeStyle1(1);
-    }
-
-    public void style2(View view) {
-
-    }
-
-    public void style3(View view) {
-    }
-
-    public void style4(View view) {
-    }
-
-    public void style5(View view) {
-    }
-
-    public void style6(View view) {
     }
 }

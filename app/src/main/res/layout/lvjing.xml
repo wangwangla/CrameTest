@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:scrollbars="none"
+    android:background="@color/black"
+    >
+    <LinearLayout
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/lvjing_1"
+            android:gravity="center"
+            android:text="type_1"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_2"
+            android:gravity="center"
+            android:text="type_2"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_3"
+            android:gravity="center"
+            android:text="type_3"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_4"
+            android:gravity="center"
+            android:text="type_4"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_5"
+            android:gravity="center"
+            android:text="type_5"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_6"
+            android:gravity="center"
+            android:text="type_6"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/lvjing_7"
+            android:gravity="center"
+            android:text="type_7"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </TextView>
+
+    </LinearLayout>
+
+
+</HorizontalScrollView>
