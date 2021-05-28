@@ -1,14 +1,23 @@
 package com.kangwang.cramelibrary.glsurfaceview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.RequiresApi;
+
+import com.kangwang.cramelibrary.R;
+import com.kangwang.cramelibrary.crame.CameraFocusView;
 import com.kangwang.cramelibrary.crame.CameraUtils;
 import com.kangwang.cramelibrary.FilterFactory;
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
@@ -32,10 +41,17 @@ public class GLCameraView extends GLSurfaceView {
     private SurfaceTexture mSurfaceTexture;
     private float[] mSTMatrix = new float[16];
     private Queue<Runnable> runOnDraw;
+    private CameraFocusView cameraFocusView;
+    private int width;
+    private int height;
 
+    @RequiresApi(api = 30)
     public GLCameraView(Context context) {
         super(context);
         init(context);
+
+
+//        实例化画笔对象
     }
 
     public GLCameraView(Context context, AttributeSet attrs) {
@@ -44,6 +60,13 @@ public class GLCameraView extends GLSurfaceView {
     }
 
     private void init(Context context) {
+//        Display display = context.getDisplay();
+//        width = display.getWidth();
+//        height = display.getHeight();
+//        cameraFocusView = new CameraFocusView(context);
+//        cameraFocusView.setMinimumWidth(width);
+//        cameraFocusView.setMinimumHeight(height);
+
         this.context = context;
         setEGLContextClientVersion(2);
         renderer = new GLCameraView.GLRenderer(this);
@@ -108,8 +131,6 @@ public class GLCameraView extends GLSurfaceView {
             mSurfaceTexture.updateTexImage();
             mSurfaceTexture.getTransformMatrix(mSTMatrix);
             currentFilter.draw(textureId, mSTMatrix);
-//            GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         }
 
         @Override
@@ -151,5 +172,11 @@ public class GLCameraView extends GLSurfaceView {
 
     public void switchCame() {
         cameraHelper.switchCame();
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 }

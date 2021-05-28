@@ -43,10 +43,11 @@ public abstract class BaseFilter {
     protected int mGLUniformTexture;
     protected int mGLAttribTextureCoordinate;
     protected int mHMatrix;
-//    private final LinkedList<Runnable> mRunOnDraw;
+    private final LinkedList<Runnable> mRunOnDraw;
 
 
     public BaseFilter(Context context) {
+        mRunOnDraw = new LinkedList<>();
         this.context = context;
         vertexBuffer = createBuffer(squareCoords);
         textureBuffer = createBuffer(textureVertices);
@@ -54,6 +55,37 @@ public abstract class BaseFilter {
     }
 
     public abstract void setshaderpath();
+
+    protected void setInteger(final int location, final int intValue) {
+
+        runOnDraw(new Runnable() {
+            @Override
+            public void run() {
+                GLES20.glUniform1i(location, intValue);
+            }
+        });
+
+    }
+
+    protected void setFloat(final int location, final float floatValue) {
+
+        runOnDraw(new Runnable() {
+            @Override
+            public void run() {
+
+                GLES20.glUniform1f(location, floatValue);
+            }
+        });
+
+
+    }
+
+
+    protected void runOnDraw(final Runnable runnable) {
+        synchronized (mRunOnDraw) {
+            mRunOnDraw.addLast(runnable);
+        }
+    }
 
     private FloatBuffer createBuffer(float[] vertexData) {
         ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertexData.length * 4);//要求用allocateDirect()方法,只有ByteBuffer有该方法,so
@@ -94,6 +126,7 @@ public abstract class BaseFilter {
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(mProgram);
+        runPendingOnDrawTasks();
         vertexBuffer.position(0);
         GLES20.glVertexAttribPointer(mGLAttribPosition, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
         GLES20.glEnableVertexAttribArray(mGLAttribPosition);
@@ -203,5 +236,11 @@ public abstract class BaseFilter {
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T,
                 GLES20.GL_CLAMP_TO_EDGE);
         return texture[0];
+    }
+
+    protected void runPendingOnDrawTasks() {
+        while (!mRunOnDraw.isEmpty()) {
+            mRunOnDraw.removeFirst().run();
+        }
     }
 }

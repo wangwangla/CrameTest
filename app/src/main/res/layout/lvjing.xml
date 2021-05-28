@@ -11,77 +11,77 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:background="@color/cardview_dark_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
-        <TextView
-            android:id="@+id/lvjing_1"
+        <LinearLayout
+            android:background="@color/cardview_dark_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:text="type_1"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            >
+            <TextView
+                android:id="@+id/lvjing_1"
+                android:gravity="center"
+                android:text="type_1"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_2"
-            android:gravity="center"
-            android:text="type_2"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_2"
+                android:gravity="center"
+                android:text="type_2"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_3"
-            android:gravity="center"
-            android:text="type_3"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_3"
+                android:gravity="center"
+                android:text="type_3"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_4"
-            android:gravity="center"
-            android:text="type_4"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_4"
+                android:gravity="center"
+                android:text="type_4"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_5"
-            android:gravity="center"
-            android:text="type_5"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_5"
+                android:gravity="center"
+                android:text="type_5"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_6"
-            android:gravity="center"
-            android:text="type_6"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_6"
+                android:gravity="center"
+                android:text="type_6"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-        <TextView
-            android:id="@+id/lvjing_7"
-            android:gravity="center"
-            android:text="type_7"
-            android:layout_width="80dp"
-            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/lvjing_7"
+                android:gravity="center"
+                android:text="type_7"
+                android:layout_width="80dp"
+                android:layout_height="50dp">
 
-        </TextView>
+            </TextView>
 
-    </LinearLayout>
+        </LinearLayout>
 
     </HorizontalScrollView>
     <Button

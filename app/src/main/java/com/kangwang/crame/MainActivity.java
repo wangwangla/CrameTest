@@ -1,5 +1,6 @@
 package com.kangwang.crame;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -11,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,6 +26,12 @@ import java.io.FileOutputStream;
 public class MainActivity extends BaseActivity{
 
     private TextView textView1;
+    private TextView textView2;
+    private TextView textView3;
+    private TextView textView4;
+    private TextView textView5;
+    private TextView textView6;
+    private TextView textView7;
     private Button openType;
     private Button fanzhuan;
 
@@ -31,6 +40,12 @@ public class MainActivity extends BaseActivity{
         crameView = findViewById(R.id.surface);
         openType = findViewById(R.id.openType);
         textView1 = findViewById(R.id.lvjing_1);
+        textView2 = findViewById(R.id.lvjing_2);
+        textView3 = findViewById(R.id.lvjing_3);
+        textView4 = findViewById(R.id.lvjing_4);
+        textView5 = findViewById(R.id.lvjing_5);
+        textView6 = findViewById(R.id.lvjing_6);
+        textView7 = findViewById(R.id.lvjing_7);
         fanzhuan = findViewById(R.id.fanzhuan);
     }
 
@@ -39,11 +54,29 @@ public class MainActivity extends BaseActivity{
         return R.layout.activity_main;
     }
 
+    @RequiresApi(api = 30)
     public void openType() {
         View viewById = findViewById(R.id.beat_type);
+        int width = getDisplay().getWidth();
+        int screenWidth = width;//获取屏幕宽度
         if (viewById.getVisibility() == View.GONE){
             viewById.setVisibility(View.VISIBLE);
+
+            Animation translateAnimation = new TranslateAnimation(screenWidth - 50,0, 0, 0);//设置平移的起点和终点
+            translateAnimation.setDuration(100);//动画持续的时间为10s
+            translateAnimation.setFillEnabled(true);//使其可以填充效果从而不回到原地
+            translateAnimation.setFillAfter(true);//不回到起始位置
+//如果不添加setFillEnabled和setFillAfter则动画执行结束后会自动回到远点
+            viewById.setAnimation(translateAnimation);//给imageView添加的动画效果
+            translateAnimation.startNow();//动画开始执行 放在最后即可
         }else {
+            Animation translateAnimation = new TranslateAnimation(0,screenWidth, 0, 0);//设置平移的起点和终点
+            translateAnimation.setDuration(100);//动画持续的时间为10s
+            translateAnimation.setFillEnabled(true);//使其可以填充效果从而不回到原地
+            translateAnimation.setFillAfter(true);//不回到起始位置
+//如果不添加setFillEnabled和setFillAfter则动画执行结束后会自动回到远点
+            viewById.setAnimation(translateAnimation);//给imageView添加的动画效果
+            translateAnimation.startNow();//动画开始执行 放在最后即可
             viewById.setVisibility(View.GONE);
         }
     }
@@ -56,6 +89,12 @@ public class MainActivity extends BaseActivity{
     protected void initListener() {
         openType.setOnClickListener(this::onClick);
         textView1.setOnClickListener(this::onClick);
+        textView2.setOnClickListener(this::onClick);
+        textView3.setOnClickListener(this::onClick);
+        textView4.setOnClickListener(this::onClick);
+        textView5.setOnClickListener(this::onClick);
+        textView6.setOnClickListener(this::onClick);
+        textView7.setOnClickListener(this::onClick);
         fanzhuan.setOnClickListener(this::onClick);
     }
     @Override
@@ -88,13 +127,13 @@ public class MainActivity extends BaseActivity{
                 crameView.changeStyle1(1);
                 break;
             case R.id.lvjing_2:
-                crameView.changeStyle1(1);
+                crameView.changeStyle1(2);
                 break;
             case R.id.lvjing_3:
-                crameView.changeStyle1(1);
+                crameView.changeStyle1(3);
                 break;
             case R.id.lvjing_4:
-                crameView.changeStyle1(1);
+                crameView.changeStyle1(4);
                 break;
             case R.id.lvjing_5:
                 crameView.changeStyle1(1);

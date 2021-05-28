@@ -36,7 +36,7 @@ public class CrameView extends GLSurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        cameraHelper.startPreview(holder);
+//        cameraHelper.startPreview(holder);
     }
 
     @Override
