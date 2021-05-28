@@ -16,34 +16,23 @@ public class BeautyFilter extends BaseFilter {
 
     public BeautyFilter(Context c) {
         super(c);
-
         setSmoothOpacity(0.5f);//默认
-
     }
 
     @Override
     public void setshaderpath() {
-
-
-
         vertextShader = R.raw.beauty_vertex;
         fragtextShader = R.raw.beauty;
     }
 
-
-
-
-
     @Override
     public void createProgram() {
         super.createProgram();
-
         mGLUniformTexture = GLES20.glGetUniformLocation(mProgram, "inputTexture");
         widthHandle = GLES20.glGetUniformLocation(mProgram,"width");
         heightHandle = GLES20.glGetUniformLocation(mProgram,"height");
         levelHandle = GLES20.glGetUniformLocation(mProgram,"opacity");
     }
-
 
     @Override
     public void onInputSizeChanged(int width, int height) {
@@ -53,12 +42,9 @@ public class BeautyFilter extends BaseFilter {
 
     @Override
     protected void onDrawArraysPre() {
-
         setInteger(widthHandle,width);
         setInteger(heightHandle,height);
         setFloat(levelHandle,opacity);
-
-
     }
 
     @Override
@@ -72,13 +58,11 @@ public class BeautyFilter extends BaseFilter {
      * @param percent 百分比
      */
     public void setSmoothOpacity(float percent) {
-
         if (percent <= 0) {
             opacity = 0.0f;
         } else {
             opacity = calculateOpacity(percent);
         }
-
     }
 
     /**
@@ -88,11 +72,7 @@ public class BeautyFilter extends BaseFilter {
      */
     private float calculateOpacity(float percent) {
         float result;
-
         result = (float) (1.0f - (1.0f - percent + 0.02) / 2.0f);
-
         return result;
     }
-
-
 }
