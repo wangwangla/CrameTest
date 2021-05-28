@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
 import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
@@ -21,12 +22,16 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends BaseActivity{
 
+    private TextView textView1;
     private Button openType;
+    private Button fanzhuan;
 
     @Override
     protected void initView() {
         crameView = findViewById(R.id.surface);
         openType = findViewById(R.id.openType);
+        textView1 = findViewById(R.id.lvjing_1);
+        fanzhuan = findViewById(R.id.fanzhuan);
     }
 
     @Override
@@ -50,7 +55,8 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void initListener() {
         openType.setOnClickListener(this::onClick);
-
+        textView1.setOnClickListener(this::onClick);
+        fanzhuan.setOnClickListener(this::onClick);
     }
     @Override
     public void onClick(View v) {
@@ -59,7 +65,6 @@ public class MainActivity extends BaseActivity{
                 openType();
                 break;
             case R.id.beat_type:
-
                 break;
             case R.id.type_1:
                 type(1);
@@ -79,6 +84,31 @@ public class MainActivity extends BaseActivity{
             case R.id.type_6:
                 type(6);
                 break;
+            case R.id.lvjing_1:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_2:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_3:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_4:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_5:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_6:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_7:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.fanzhuan:
+                crameView.switchCame();
+                break;
+
         }
     }
 
@@ -91,8 +121,6 @@ public class MainActivity extends BaseActivity{
     protected void onResume() {
         super.onResume();
     }
-
-
 
     @Override
     protected void checkPermissions() {
