@@ -1,4 +1,4 @@
-package com.kangwang.cramelibrary.method1;
+package com.kangwang.cramelibrary.surfaceview;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -6,7 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 
-import com.kangwang.cramelibrary.CameraUtils;
+import com.kangwang.cramelibrary.crame.CameraUtils;
 import com.kangwang.cramelibrary.ImageCallback;
 
 
@@ -36,7 +36,7 @@ public class CrameView extends GLSurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        cameraHelper.startPreview(holder);
+//        cameraHelper.startPreview(holder);
     }
 
     @Override

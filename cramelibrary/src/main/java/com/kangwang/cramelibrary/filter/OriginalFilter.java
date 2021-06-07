@@ -6,14 +6,13 @@ public class OriginalFilter extends BaseFilter {
 
     public OriginalFilter(Context c) {
         super(c);
-
     }
 
     @Override
-    public void setPath() {
+    public void setshaderpath() {
 
-        path1 = R.raw.base_vertex_shader;
-        path2 = R.raw.base_fragment_shader;
+        vertextShader = R.raw.base_vertex_shader;
+        fragtextShader = R.raw.base_fragment_shader;
 
     }
 

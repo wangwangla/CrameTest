@@ -1,5 +1,6 @@
 package com.kangwang.crame;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -11,35 +12,143 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.kangwang.cramelibrary.CameraUtils;
-import com.kangwang.cramelibrary.FileUtils;
+import com.kangwang.crame.base.BaseActivity;
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
-import com.kangwang.cramelibrary.GLCameraView;
-import com.kangwang.cramelibrary.ImageCallback;
-import com.kangwang.cramelibrary.method1.CrameView;
+import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
-    GLCameraView crameView;
+public class MainActivity extends BaseActivity {
+    private TextView textView1;
+    private TextView textView2;
+    private TextView textView3;
+    private TextView textView4;
+    private TextView textView5;
+    private TextView textView6;
+    private TextView textView7;
+    private Button openType;
+    private Button fanzhuan;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void initView() {
         crameView = findViewById(R.id.surface);
-        checkPermissions();
-        if (PermissionUtils.permissionsChecking(
-                this,
-                new String[] {
-                        Manifest.permission.CAMERA
-                })) {
+        openType = findViewById(R.id.openType);
+        textView1 = findViewById(R.id.lvjing_1);
+        textView2 = findViewById(R.id.lvjing_2);
+        textView3 = findViewById(R.id.lvjing_3);
+        textView4 = findViewById(R.id.lvjing_4);
+        textView5 = findViewById(R.id.lvjing_5);
+        textView6 = findViewById(R.id.lvjing_6);
+        textView7 = findViewById(R.id.lvjing_7);
+        fanzhuan = findViewById(R.id.fanzhuan);
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_main;
+    }
+
+    @RequiresApi(api = 30)
+    public void openType() {
+        View viewById = findViewById(R.id.beat_type);
+        int width = getDisplay().getWidth();
+        int screenWidth = width;//获取屏幕宽度
+        if (viewById.getVisibility() == View.GONE){
+            viewById.setVisibility(View.VISIBLE);
+
+            Animation translateAnimation = new TranslateAnimation(screenWidth - 50,0, 0, 0);//设置平移的起点和终点
+            translateAnimation.setDuration(100);//动画持续的时间为10s
+            translateAnimation.setFillEnabled(true);//使其可以填充效果从而不回到原地
+            translateAnimation.setFillAfter(true);//不回到起始位置
+//如果不添加setFillEnabled和setFillAfter则动画执行结束后会自动回到远点
+            viewById.setAnimation(translateAnimation);//给imageView添加的动画效果
+            translateAnimation.startNow();//动画开始执行 放在最后即可
+        }else {
+            Animation translateAnimation = new TranslateAnimation(0,screenWidth, 0, 0);//设置平移的起点和终点
+            translateAnimation.setDuration(100);//动画持续的时间为10s
+            translateAnimation.setFillEnabled(true);//使其可以填充效果从而不回到原地
+            translateAnimation.setFillAfter(true);//不回到起始位置
+//如果不添加setFillEnabled和setFillAfter则动画执行结束后会自动回到远点
+            viewById.setAnimation(translateAnimation);//给imageView添加的动画效果
+            translateAnimation.startNow();//动画开始执行 放在最后即可
+            viewById.setVisibility(View.GONE);
+        }
+    }
+
+    public void type(int index){
+
+    }
+
+    @Override
+    protected void initListener() {
+        openType.setOnClickListener(this::onClick);
+        textView1.setOnClickListener(this::onClick);
+        textView2.setOnClickListener(this::onClick);
+        textView3.setOnClickListener(this::onClick);
+        textView4.setOnClickListener(this::onClick);
+        textView5.setOnClickListener(this::onClick);
+        textView6.setOnClickListener(this::onClick);
+        textView7.setOnClickListener(this::onClick);
+        fanzhuan.setOnClickListener(this::onClick);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.openType:
+                openType();
+                break;
+            case R.id.beat_type:
+                break;
+            case R.id.type_1:
+                type(1);
+                break;
+            case R.id.type_2:
+                type(2);
+                break;
+            case R.id.type_3:
+                type(3);
+                break;
+            case R.id.type_4:
+                type(4);
+                break;
+            case R.id.type_5:
+                type(5);
+                break;
+            case R.id.type_6:
+                type(6);
+                break;
+            case R.id.lvjing_1:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_2:
+                crameView.changeStyle1(2);
+                break;
+            case R.id.lvjing_3:
+                crameView.changeStyle1(3);
+                break;
+            case R.id.lvjing_4:
+                crameView.changeStyle1(4);
+                break;
+            case R.id.lvjing_5:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_6:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.lvjing_7:
+                crameView.changeStyle1(1);
+                break;
+            case R.id.fanzhuan:
+                crameView.switchCame();
+                break;
+
         }
     }
 
@@ -53,11 +162,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void checkPermissions() {
+    @Override
+    protected void checkPermissions() {
         PermissionUtils.requestPermissions(this, new String[] {
                 Manifest.permission.CAMERA,
         }, 0);
+        if (PermissionUtils.permissionsChecking(this, new String[] {Manifest.permission.CAMERA})){}
     }
+
+
 
 //    public void picture(View view) {
 //        crameView.takePicture(new ImageCallback(){
@@ -89,6 +202,36 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
+//
+
+    public void picture(View view) {
+        crameView.takePicture(new FilteredBitmapCallback(){
+            @Override
+            public void onData(Bitmap bitmap) {
+//                File file = FileUtils.createImageFile();
+//                //重新写入文件
+//                try {
+//                    // 写入文件
+//                    FileOutputStream fos;
+//                    fos = new FileOutputStream(file);
+//                    //默认jpg
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//                    fos.flush();
+//                    fos.close();
+//                    bitmap.recycle();
+//
+//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+//                            Uri.fromFile(file)));
+//
+////                    Toast.makeText(GLCameraActivity.this, "finished", Toast.LENGTH_SHORT).show();
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+            }
+        });
+    }
+
     /**
      * 旋转图片
      *
@@ -129,59 +272,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    }
-
-    public void picture(View view) {
-        crameView.takePicture(new FilteredBitmapCallback(){
-            @Override
-            public void onData(Bitmap bitmap) {
-//                File file = FileUtils.createImageFile();
-//                //重新写入文件
-//                try {
-//                    // 写入文件
-//                    FileOutputStream fos;
-//                    fos = new FileOutputStream(file);
-//                    //默认jpg
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-//                    fos.flush();
-//                    fos.close();
-//                    bitmap.recycle();
-//
-//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-//                            Uri.fromFile(file)));
-//
-////                    Toast.makeText(GLCameraActivity.this, "finished", Toast.LENGTH_SHORT).show();
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-            }
-        });
-    }
-
-    public void switchCame(View view) {
-        crameView.switchCame();
-    }
-
-
-    public void style1(View view) {
-        crameView.changeStyle1();
-    }
-
-    public void style2(View view) {
-
-    }
-
-    public void style3(View view) {
-    }
-
-    public void style4(View view) {
-    }
-
-    public void style5(View view) {
-    }
-
-    public void style6(View view) {
     }
 }

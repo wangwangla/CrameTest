@@ -3,7 +3,7 @@
     package="com.kangwang.cramelibrary">
 
     <application>
-        <activity android:name=".method1.CrameView"></activity>
+        <activity android:name=".surfaceview.CrameView"></activity>
     </application>
 
 </manifest>

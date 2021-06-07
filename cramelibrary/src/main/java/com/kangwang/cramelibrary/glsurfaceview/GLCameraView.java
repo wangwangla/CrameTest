@@ -1,43 +1,57 @@
-package com.kangwang.cramelibrary;
+package com.kangwang.cramelibrary.glsurfaceview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.SurfaceHolder;
 
+import androidx.annotation.RequiresApi;
+
+import com.kangwang.cramelibrary.R;
+import com.kangwang.cramelibrary.crame.CameraFocusView;
+import com.kangwang.cramelibrary.crame.CameraUtils;
+import com.kangwang.cramelibrary.FilterFactory;
+import com.kangwang.cramelibrary.FilteredBitmapCallback;
 import com.kangwang.cramelibrary.filter.BaseFilter;
-import com.kangwang.cramelibrary.filter.CoolFilter;
 import com.kangwang.cramelibrary.filter.OriginalFilter;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
 
 public class GLCameraView extends GLSurfaceView {
     public GLCameraView.GLRenderer renderer;
-    private BaseFilter mCurrentFilter;
-    private CameraUtils mCameraHelper;
+    private BaseFilter currentFilter;
+    private CameraUtils cameraHelper;
     private Context context;
-    private int mTextureId;
+    private int textureId;
     private SurfaceTexture mSurfaceTexture;
     private float[] mSTMatrix = new float[16];
+    private Queue<Runnable> runOnDraw;
+    private CameraFocusView cameraFocusView;
+    private int width;
+    private int height;
 
+    @RequiresApi(api = 30)
     public GLCameraView(Context context) {
         super(context);
         init(context);
+
+
+//        实例化画笔对象
     }
 
     public GLCameraView(Context context, AttributeSet attrs) {
@@ -46,6 +60,13 @@ public class GLCameraView extends GLSurfaceView {
     }
 
     private void init(Context context) {
+//        Display display = context.getDisplay();
+//        width = display.getWidth();
+//        height = display.getHeight();
+//        cameraFocusView = new CameraFocusView(context);
+//        cameraFocusView.setMinimumWidth(width);
+//        cameraFocusView.setMinimumHeight(height);
+
         this.context = context;
         setEGLContextClientVersion(2);
         renderer = new GLCameraView.GLRenderer(this);
@@ -53,32 +74,21 @@ public class GLCameraView extends GLSurfaceView {
         setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
 
-
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         super.surfaceDestroyed(holder);
-        if (mCameraHelper!=null){
-            mCameraHelper.releaseCamera();
+        if (cameraHelper !=null){
+            cameraHelper.releaseCamera();
         }
     }
 
-    public void takePicture(FilteredBitmapCallback imageCallback) {
-        imageCallback.onData(capture());
-    }
-
-    public void switchCame() {
-        mCameraHelper.switchCame();
-    }
-
-    public void changeStyle1() {
+    public void changeStyle1(int type) {
         runOnDraw(()->{
-            mCurrentFilter.releaseProgram();
-            int type = 1;
-            mCurrentFilter = FilterFactory.createFilter(context,type);
+            currentFilter.releaseProgram();
+            currentFilter = FilterFactory.createFilter(context,type);
             //调整预览画面
-            mCurrentFilter.createProgram();
-            mCurrentFilter.onInputSizeChanged(getWidth(),getHeight());
-            //调整录像画面
+            currentFilter.createProgram();
+            currentFilter.onInputSizeChanged(getWidth(),getHeight());
         });
     }
 
@@ -87,8 +97,8 @@ public class GLCameraView extends GLSurfaceView {
         GLSurfaceView surfaceView;
         public GLRenderer(GLSurfaceView surfaceView) {
             this.surfaceView = surfaceView;
-            mCameraHelper = new CameraUtils(surfaceView);
-            mCurrentFilter = new OriginalFilter(context);
+            cameraHelper = new CameraUtils(surfaceView);
+            currentFilter = new OriginalFilter(context);
             runOnDraw = new LinkedList<>();
         }
 
@@ -100,13 +110,13 @@ public class GLCameraView extends GLSurfaceView {
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             GLES20.glViewport(0, 0, width, height);
-            mCameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-            mCurrentFilter.createProgram();
-            mCurrentFilter.onInputSizeChanged(width, height);
-            mTextureId = BaseFilter.bindTexture();
-            mSurfaceTexture = new SurfaceTexture(mTextureId);
+            cameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            currentFilter.createProgram();
+            currentFilter.onInputSizeChanged(width, height);
+            textureId = BaseFilter.bindTexture();
+            mSurfaceTexture = new SurfaceTexture(textureId);
             mSurfaceTexture.setOnFrameAvailableListener(this);
-            mCameraHelper.startPreview(mSurfaceTexture);
+            cameraHelper.startPreview(mSurfaceTexture);
         }
 
         /**
@@ -120,9 +130,7 @@ public class GLCameraView extends GLSurfaceView {
             runAll(runOnDraw);
             mSurfaceTexture.updateTexImage();
             mSurfaceTexture.getTransformMatrix(mSTMatrix);
-            mCurrentFilter.draw(mTextureId, mSTMatrix);
-//            GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+            currentFilter.draw(textureId, mSTMatrix);
         }
 
         @Override
@@ -149,7 +157,6 @@ public class GLCameraView extends GLSurfaceView {
             runOnDraw.add(runnable);
         }
     }
-    private Queue<Runnable> runOnDraw;
 
     private void runAll(Queue<Runnable> queue) {
         synchronized (queue) {
@@ -157,5 +164,19 @@ public class GLCameraView extends GLSurfaceView {
                 queue.poll().run();
             }
         }
+    }
+
+    public void takePicture(FilteredBitmapCallback imageCallback) {
+        imageCallback.onData(capture());
+    }
+
+    public void switchCame() {
+        cameraHelper.switchCame();
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 }
