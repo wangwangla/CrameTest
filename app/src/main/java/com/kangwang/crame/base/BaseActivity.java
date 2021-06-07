@@ -1,4 +1,4 @@
-package com.kangwang.crame;
+package com.kangwang.crame.base;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -14,13 +14,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        setFullScreen();
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
         checkPermissions();
         initView();
         initListener();
+    }
+
+    private void setFullScreen() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
     }
 
     protected abstract void initListener();

@@ -17,14 +17,14 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kangwang.crame.base.BaseActivity;
 import com.kangwang.cramelibrary.FilteredBitmapCallback;
 import com.kangwang.cramelibrary.glsurfaceview.GLCameraView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class MainActivity extends BaseActivity{
-
+public class MainActivity extends BaseActivity {
     private TextView textView1;
     private TextView textView2;
     private TextView textView3;
@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity{
         textView7.setOnClickListener(this::onClick);
         fanzhuan.setOnClickListener(this::onClick);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){

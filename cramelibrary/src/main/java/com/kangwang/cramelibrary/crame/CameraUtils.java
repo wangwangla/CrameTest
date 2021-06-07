@@ -247,7 +247,6 @@ public class CameraUtils implements Camera.AutoFocusCallback, View.OnTouchListen
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         focusOnTouch((int)event.getX(),(int)event.getY());
-        System.out.println("======touch run");
         return false;
     }
 
