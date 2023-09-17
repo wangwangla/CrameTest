@@ -98,6 +98,7 @@ public class GLCameraView extends GLSurfaceView {
         public GLRenderer(GLSurfaceView surfaceView) {
             this.surfaceView = surfaceView;
             cameraHelper = new CameraUtils(surfaceView);
+            cameraHelper.openCamera(0);
             currentFilter = new OriginalFilter(context);
             runOnDraw = new LinkedList<>();
         }

@@ -214,18 +214,6 @@ public class CameraUtils implements Camera.AutoFocusCallback, View.OnTouchListen
 
     }
 
-
-//    public void switchCame(SurfaceHolder holder) {
-//        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-//            cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-//        } else {
-//            cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
-//        }
-//        releaseCamera();
-//        openCamera(cameraId);
-//        startPreview(holder);
-//    }
-
     public void switchCame() {
         if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             cameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
